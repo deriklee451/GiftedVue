@@ -14,14 +14,20 @@ class GiftsService {
 
     async openGift(id) {
         let gift = AppState.gifts.find(g => g.id == id)
+        console.log("found a gift with ID", gift)
         gift.opened = true
 
-        const res = await giftApi.put(gift.id, id)
+        let index = AppState.gifts.indexOf(gift)
 
-        let index = AppState.gifts.findIndex(g => g.id == id)
-        AppState.gifts.splice(index, 2, new Gift(res.data))
+        const res = await giftApi.put(`/${id}`, gift)
 
+        let openedGift = new Gift(res.data)
+        AppState.gifts.splice(index, 1, openedGift)
+    }
 
+    async createGift(giftData) {
+        const res = await giftApi.post('', giftData)
+        AppState.gifts = [new Gift(res.data), ...AppState.gifts]
     }
 
 
