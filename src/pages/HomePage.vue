@@ -1,7 +1,8 @@
 <template>
   <section class="row m-3">
+    <i class="mdi mdi-creation fs-1 selectable text-center"></i>
     <div v-for="g in gifts" class="col-md-3 rounded elevation-2">
-      <div>
+      <div @click="openGift(g.id)">
         <img v-if="(g.opened == true)" class="img-fluid" :src="g.img" alt="">
         <img v-else class="img-fluid"
           src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1680&q=80"
@@ -39,9 +40,17 @@ export default {
     }
 
 
-
     return {
-      gifts: computed(() => AppState.gifts)
+      gifts: computed(() => AppState.gifts),
+
+      async openGift(id) {
+        try {
+          await giftsService.openGift(id)
+        } catch (error) {
+          logger.log(error)
+        }
+
+      }
 
 
     }
